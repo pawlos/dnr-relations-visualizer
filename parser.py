@@ -1,9 +1,15 @@
 import urllib2
+import re
 from bs4 import BeautifulSoup
+
+def getGuest(title):
+	phrase = re.search('with\s+(.*)', title)
+	return phrase.group(1) if phrase else ''
 
 def parseEpisode(episode):
 	return	{ 'no': int(episode.font.text), 
-			  'title': episode.a.text }
+			  'title': episode.a.text,
+              'guest': getGuest(episode.a.text)}
 
 url = 'http://www.dotnetrocks.com/archives.aspx'
 

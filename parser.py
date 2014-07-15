@@ -1,5 +1,6 @@
 import urllib2
 import re
+import datetime
 from bs4 import BeautifulSoup
 
 def getGuest(title):
@@ -12,7 +13,8 @@ def getGuest(title):
 def parseEpisode(episode):
 	return	{ 'no': int(episode.td.text), 
 			  'title': episode.a.text,
-              'guest': getGuest(episode.a.text)}
+              'guest': getGuest(episode.a.text),
+              'date': datetime.datetime.strptime(episode.findAll('td')[2].text, '%m/%d/%Y')}
 
 
 if __name__ == '__main__':

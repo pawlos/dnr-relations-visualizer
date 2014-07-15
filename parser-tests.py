@@ -15,6 +15,8 @@ class TestParserFunctions(unittest.TestCase):
 		html = BeautifulSoup(html)
 		episode = parser.parseEpisode(html)
 		self.assertEqual(1008, episode['no'])
+		self.assertEqual('Michelle Smith', episode['guest'])
+		self.assertEqual('Building Development Teams with Michelle Smith', episode['title'])
 
 if __name__ == '__main__':
 	unittest.main()

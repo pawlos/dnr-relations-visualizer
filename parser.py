@@ -10,7 +10,7 @@ def getGuest(title):
 		return title
 
 def parseEpisode(episode):
-	return	{ 'no': int(episode.font.text), 
+	return	{ 'no': int(episode.td.text), 
 			  'title': episode.a.text,
               'guest': getGuest(episode.a.text)}
 

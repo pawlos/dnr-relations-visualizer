@@ -27,6 +27,10 @@ class TestParserFunctions(unittest.TestCase):
 		episode = self.execute()
 		self.assertEqual(datetime.datetime(2014,7,15), episode['date'])
 
+	def test_encode_datetime_does_correctly_returns_string(self):
+		date = datetime.datetime(2014,7,15);
+		self.assertEqual('2014-07-15', parser.encode_datetime(date))
+
 	def execute(self):
 		html = '<td>1008</td><td><a href="default.aspx?showNum=1008">Building Development Teams with Michelle Smith</a></td><td>7/15/2014</td>'
 		html = BeautifulSoup(html)

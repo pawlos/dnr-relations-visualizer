@@ -4,6 +4,8 @@ import datetime
 from bs4 import BeautifulSoup
 import json
 
+baseUrl = 'http://www.dotnetrocks.com/'
+
 def getGuest(title):
 	phrase = re.search('with\s+(.*)', title)
 	if phrase:
@@ -15,6 +17,7 @@ def parseEpisode(episode):
 	return	{ 'no': int(episode.td.text), 
 			  'title': episode.a.text,
               'guest': getGuest(episode.a.text),
+              'url' : baseUrl+episode.a['href'],
               'date': datetime.datetime.strptime(episode.findAll('td')[2].text, '%m/%d/%Y')}
 
 def encode_datetime(obj):
@@ -28,7 +31,7 @@ def toJson(episodes):
 
 
 if __name__ == '__main__':
-	url = 'http://www.dotnetrocks.com/archives.aspx'
+	url = baseUrl + '/archives.aspx'
 
 	episodes = urllib2.urlopen(url)
 

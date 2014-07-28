@@ -31,6 +31,10 @@ class TestParserFunctions(unittest.TestCase):
 		date = datetime.datetime(2014,7,15);
 		self.assertEqual('2014-07-15', parser.encode_datetime(date))
 
+	def test_parseEpisode_extract_url_correctly(self):
+		episode = self.execute()
+		self.assertEqual('http://www.dotnetrocks.com/default.aspx?showNum=1008', episode['url'])
+
 	def execute(self):
 		html = '<td>1008</td><td><a href="default.aspx?showNum=1008">Building Development Teams with Michelle Smith</a></td><td>7/15/2014</td>'
 		html = BeautifulSoup(html)

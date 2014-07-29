@@ -25,19 +25,23 @@ def encode_datetime(obj):
 		return obj.strftime('%Y-%m-%d')
 	raise TypeError(repr(o) + " is not JSON serializable")
 
+def extractEpisodeTime(html):
+	return int(re.search('(\d+) minutes?', html.span.text).group(1))
+
 def toJson(episodes):
 	with open('episodes.json', 'w') as output:
 		json.dump(episodes, output, default=encode_datetime)
 
 
 if __name__ == '__main__':
+	print "Fetching archives..."
 	url = baseUrl + '/archives.aspx'
 
 	episodes = urllib2.urlopen(url)
 
 	html = episodes.read()
 	parsed_html = BeautifulSoup(html)
-
+	print "Parsing episodes..."
 	items = map(parseEpisode, 
 				parsed_html.findAll('tr', attrs={'class':'archivecell'}))
 	sortedEposides = sorted(items, key=lambda item: item.__getitem__, reverse=True)

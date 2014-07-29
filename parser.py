@@ -18,7 +18,8 @@ def parseEpisode(episode):
 			  'title': episode.a.text,
               'guest': getGuest(episode.a.text),
               'url' : baseUrl+episode.a['href'],
-              'date': datetime.datetime.strptime(episode.findAll('td')[2].text, '%m/%d/%Y')}
+              'date': datetime.datetime.strptime(episode.findAll('td')[2].text, '%m/%d/%Y'),
+              'episodeLen': 0}
 
 def encode_datetime(obj):
 	if isinstance(obj, datetime.datetime):
@@ -26,12 +27,23 @@ def encode_datetime(obj):
 	raise TypeError(repr(o) + " is not JSON serializable")
 
 def extractEpisodeTime(html):
-	return int(re.search('(\d+) minutes?', html.span.text).group(1))
+	result = re.search('(\d+) minutes?', html.font.text)
+	return int(result.group(1) if result != None else 0)
 
 def toJson(episodes):
 	with open('episodes.json', 'w') as output:
 		json.dump(episodes, output, default=encode_datetime)
 
+def addEpisodeTime(episode):
+	#print episode
+	print "Fetching episode no. %d" % episode['no']
+	episodeContent = urllib2.urlopen(episode['url'])
+	parsed_html = BeautifulSoup(episodeContent)
+	length = extractEpisodeTime(
+			 	parsed_html.findAll('span', attrs={'id':'ContentPlaceHolder1_lblTime'})[0])
+	episode['episodeLen'] = length
+
+	return episode
 
 if __name__ == '__main__':
 	print "Fetching archives..."
@@ -44,6 +56,7 @@ if __name__ == '__main__':
 	print "Parsing episodes..."
 	items = map(parseEpisode, 
 				parsed_html.findAll('tr', attrs={'class':'archivecell'}))
+	item = map(addEpisodeTime, items)
 	sortedEposides = sorted(items, key=lambda item: item.__getitem__, reverse=True)
 	toJson(sortedEposides)
 

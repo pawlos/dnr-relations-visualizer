@@ -36,10 +36,16 @@ class TestParserFunctions(unittest.TestCase):
 		self.assertEqual('http://www.dotnetrocks.com/default.aspx?showNum=1008', episode['url'])
 
 	def test_parseEpisodeContent_extracts_time_correctly(self):
-		html = '<span id="ContentPlaceHolder1_lblTime" style="font-size:8pt;">56 minutes</span>'
+		html = '<span id="ContentPlaceHolder1_lblTime"><font size="1">56 minutes</font></span>'
 		html = BeautifulSoup(html)
 		time = parser.extractEpisodeTime(html)
 		self.assertEqual(56, time)
+
+	def test_parseEpisodeContent_when_empty_does_not_throw_exception(self):
+		html = '<span id="ContentPlaceHolder1_lblTime"><font size="1">   </font></span>'
+		html = BeautifulSoup(html)
+		time = parser.extractEpisodeTime(html)
+		self.assertEqual(0, time)
 
 	def execute(self):
 		html = '<td>1008</td><td><a href="default.aspx?showNum=1008">Building Development Teams with Michelle Smith</a></td><td>7/15/2014</td>'

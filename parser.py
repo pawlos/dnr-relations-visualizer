@@ -3,8 +3,11 @@ import re
 import datetime
 from bs4 import BeautifulSoup
 import json
+import sys
 
 baseUrl = 'http://www.dotnetrocks.com/'
+title = 'dotnetorocks scraper'
+usage = 'usage: parser.py command\n\ncommand:\n\t\tdownload-all - downloads all episodes info\n'
 
 def getGuest(title):
 	phrase = re.search('with\s+(.*)', title)
@@ -45,7 +48,7 @@ def addEpisodeTime(episode):
 
 	return episode
 
-if __name__ == '__main__':
+def downloadEpisodes():
 	print "Fetching archives..."
 	url = baseUrl + '/archives.aspx'
 
@@ -59,5 +62,15 @@ if __name__ == '__main__':
 	item = map(addEpisodeTime, items)
 	sortedEposides = sorted(items, key=lambda item: item.__getitem__, reverse=True)
 	toJson(sortedEposides)
-
 	print "End"
+
+if __name__ == '__main__':
+	if len(sys.argv) < 2:
+		print title
+		print usage
+	else:
+		action = sys.argv[1]
+		if action == 'download-all':
+			downloadEpisodes()
+		else:
+			print 'Unknown command'

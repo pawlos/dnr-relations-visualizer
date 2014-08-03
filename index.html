@@ -2,9 +2,8 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>dotnetorocks speaker relations visualizer</title>
+        <title>DOTNET ROCKS statistics visualizer</title>
         <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-        <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
         <style>
             .chart rect {
                 fill: steelblue;
@@ -34,8 +33,9 @@ var chart = d3.select(".chart")
     .attr("height", height);
 
 d3.json("episodes.json", function(error, data) {
-  y.domain([0, d3.max(data, function(d) { return d.episodeLen; }) + 50]);
-    var barWidth = width / data.length;
+  var max = d3.max(data, function(d) { return d.episodeLen; }) + 50;
+  y.domain([0, max]);
+  var barWidth = width / data.length;
 
   var bar = chart.selectAll("g")
       .data(data)
@@ -53,12 +53,16 @@ d3.json("episodes.json", function(error, data) {
       .attr("dy", ".75em")
       .style("fill", "black")
       .text(function(d) { return d.episodeLen; });
-});
 
-function type(d) {
-  d.episodeLen = +d.episodeLen; // coerce to number
-  return d;
-}
+  var avg = d3.mean(data, function(d) { return d.episodeLen; });
+    
+  chart.append("line")
+    .attr("x1", 0)
+    .attr("y1", (1 - (avg/max))*height)
+    .attr("x2", width)
+    .attr("y2", (1 - (avg/max))*height)
+    .style("stroke","red");
+});
 
 
 </script>

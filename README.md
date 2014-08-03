@@ -1,4 +1,4 @@
-dnr-relations-visualizer
+dnr-visualizer
 ========================
 
-Visualize dnr episodes relations
+Visualize dnr episodes statistics

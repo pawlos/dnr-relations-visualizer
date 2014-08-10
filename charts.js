@@ -57,4 +57,23 @@ d3.json("episodes.json", function(error, data) {
     .attr("x2", width)
     .attr("y2", (1 - (avg/max))*height)
     .style("stroke","red");
+
+
+  var minMaxChart = d3.select(".minMaxChart")
+                      .attr("width",500)
+                      .attr("height", 200);
+
+  var min = d3.min(data, function(d) { return +d.episodeLen == 0 ? Number.MAX_VALUE : +d.episodeLen; });
+  var max = d3.max(data, function(d) { return +d.episodeLen; });
+
+  minMaxChart.append("text")
+          .attr("y", 25)
+          .text(function(d) { return "Shortest(*) episode: "+min+" minutes." });
+  minMaxChart.append("text")
+          .attr("y", 50)
+          .text(function(d) { return "Longest episode: " + max + " minutes." });
+
+  minMaxChart.append("text")
+          .attr("y", 75)
+          .text(function(d) { return "* - excluding wrongly marked as 0 minutes episodes" });
 });
